@@ -5,20 +5,14 @@ const app = express();
 
 const port = 8080;
 
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  res.render('index');
-});
-
-app.get('/buzzwords', (req, res) => {
-});
-
-//testing bodyParser
-app.post('/', (req, res) => {
-  console.log(req.body);
+app.post('/:buzzWord/:points/', (req, res, next) => {
+  console.log(req.params);
+  res.send({ success: true });
+  next();
 });
 
 app.listen(port, () => {
