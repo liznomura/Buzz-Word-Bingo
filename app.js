@@ -10,7 +10,6 @@ let score = 0;
 
 let getBuzzArr;
 
-
 function handlePost( req, res ) {
   let number = parseInt(req.body.points);
   req.body.points = number;
@@ -49,7 +48,17 @@ function handlePut( req, res ) {
       success: true,
       newScore: score
     });
+  } else {
+    res.send({ success: false });
+  }
+}
+
+function handleDelete( req, res ) {
+  const index = getBuzzArr.indexOf(req.body.buzzWord);
+  if(index >= 0) {
+    wordArr.splice(index, 1);
     console.log(wordArr);
+    res.send({ success: true });
   } else {
     res.send({ success: false });
   }
@@ -72,6 +81,8 @@ app.get('/buzzwords', handleGet);
 app.post('/buzzword', handlePost);
 
 app.put('/buzzword', handlePut);
+
+app.delete('/buzzword', handleDelete);
 
 app.post('/reset', handleReset);
 
