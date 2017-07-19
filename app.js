@@ -8,6 +8,9 @@ const port = 8080;
 let wordArr = [];
 let score = 0;
 
+let getBuzzArr;
+
+
 function handlePost( req, res ) {
   let number = parseInt(req.body.points);
   req.body.points = number;
@@ -18,12 +21,14 @@ function handlePost( req, res ) {
 }
 
 function handleGet( req, res ) {
-  let getBuzzArr = wordArr.map( obj => {
+  getBuzzArr = wordArr.map( obj => {
     return obj.buzzWord;
   });
+
   let buzzObj = {
     buzzWords: getBuzzArr
   };
+
   res.send(buzzObj);
   console.log('Printed buzzwords');
 }
@@ -33,6 +38,21 @@ function handleReset( req, res ) {
   score = 0;
   res.send({ success: true });
   console.log('Buzzwords erased, scores reset to 0');
+}
+
+function handlePut( req, res ) {
+  const index = getBuzzArr.indexOf(req.body.buzzWord);
+  if(index >= 0) {
+    wordArr[index].heard = 'true';
+    score += wordArr[index].points;
+    res.send({
+      success: true,
+      newScore: score
+    });
+    console.log(wordArr);
+  } else {
+    res.send({ success: false });
+  }
 }
 
 function validation( req, res ) {
@@ -47,11 +67,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
+app.get('/buzzwords', handleGet);
+
 app.post('/buzzword', handlePost);
+
+app.put('/buzzword', handlePut);
 
 app.post('/reset', handleReset);
 
-app.get('/buzzwords', handleGet);
 
 app.listen(port, () => {
   console.log(`Server listening on ${port}`);
