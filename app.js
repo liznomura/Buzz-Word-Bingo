@@ -57,7 +57,6 @@ function handleDelete( req, res ) {
   const index = getBuzzArr.indexOf(req.body.buzzWord);
   if(index >= 0) {
     wordArr.splice(index, 1);
-    console.log(wordArr);
     res.send({ success: true });
   } else {
     res.send({ success: false });
